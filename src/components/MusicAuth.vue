@@ -88,6 +88,7 @@
           <vee-form
             v-else
             :validation-schema="schema"
+            @submit="register"
           >
             <!-- Name -->
             <div class="mb-3">
@@ -193,6 +194,7 @@
                 value="1"
               />
               <label class="inline-block">Accept terms of service</label>
+              <br>
               <VeeErrorMessage 
                 class="text-red-600"
                 name="tos" 
