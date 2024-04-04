@@ -41,7 +41,9 @@
     },
     "rules": {
       "no-console": "warn",
-      "no-debugger": "warn"
+      "no-debugger": "warn",
+      "eslint-plugin-vue/no-multiple-template-root": "off",
+      "vue/no-multiple-template-root": "off"
     },
     "overrides": [
       {
