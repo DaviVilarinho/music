@@ -18,6 +18,7 @@
             <a
               class="px-2 text-white"
               href="#"
+              @click.prevent="toggleAuthModal"
             >Login / Register</a>
           </li>
           <li>
@@ -34,6 +35,11 @@
 
 <script>
 export default {
-    name: 'MusicHeader'
+    name: 'MusicHeader',
+    methods: {
+        toggleAuthModal() {
+            this.$store.state.authModalShow = !this.$store.state.authModalShow 
+        }
+    }
 }
 </script>
