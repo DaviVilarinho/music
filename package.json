@@ -34,7 +34,17 @@
     ],
     "parserOptions": {
       "parser": "@babel/eslint-parser"
-    }
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-debugger": "warn"
+    },
+    "overrides": [
+      {
+        "files": [ "**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],
+        "env": {"jest": true}
+      }
+    ]
   },
   "browserslist": [
     "> 1%",

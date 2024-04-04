@@ -6595,6 +6595,11 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+vue-cli-plugin-editorconfig@~0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-editorconfig/-/vue-cli-plugin-editorconfig-0.2.1.tgz#dc4834e8afc722d27c42e368edc38ecb669ab789"
+  integrity sha512-do0JMwk6rPKE7fQ3lGCQMh6Cl1F9BOT5sVLf7/Qk8RtNJlago54lcRDdMZDXUgNurix2Kyq0q8DBxTx338E0IQ==
+
 vue-eslint-parser@^8.0.1:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz#5d31129a1b3dd89c0069ca0a1c88f970c360bd0d"
