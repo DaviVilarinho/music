@@ -23,7 +23,10 @@
               Your Account
             </p>
             <!-- Modal Close Button -->
-            <div class="modal-close cursor-pointer z-50">
+            <div
+              class="modal-close cursor-pointer z-50"
+              @click.prevent="toggleAuthModal"
+            >
               <i class="fas fa-times" />
             </div>
           </div>
@@ -156,8 +159,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
     name: 'MusicAuth',
+    methods: {
+        ...mapMutations(['toggleAuthModal'])
+    },
     computed: {
         authModalShow() { return this.$store.getters.authModalShow; }
     }
