@@ -232,7 +232,10 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['toggleAuthModal'])
+        ...mapMutations(['toggleAuthModal']),
+        register(registrationForm) {
+          console.log(registrationForm);
+        }
     },
     computed: {
         ...mapGetters(['authModalShow'])
