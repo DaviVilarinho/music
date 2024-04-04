@@ -1460,6 +1460,13 @@
   dependencies:
     "@types/node" "*"
 
+"@vee-validate/rules@^4.12.6":
+  version "4.12.6"
+  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.12.6.tgz#a105242ed6df83f46288bbad58337b2297d21fe6"
+  integrity sha512-vXhunbllildEbCWaBI2m6mij7U4pDTeoqX9CQ7/0gVMhtkTZh+QhKsDSaGI2evatECINH2cpLOBaMkubdN82VQ==
+  dependencies:
+    vee-validate "4.12.6"
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@vue/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-1.4.0.tgz#8d53a1e21347db8edbe54d339902583176de09f2"
@@ -6864,7 +6871,7 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-vee-validate@^4.12.6:
+vee-validate@4.12.6, vee-validate@^4.12.6:
   version "4.12.6"
   resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.12.6.tgz#cc1b8ac99ebf00856b40a5118a23787898a70f32"
   integrity sha512-EKM3YHy8t1miPh30d5X6xOrfG/Ctq0nbN4eMpCK7ezvI6T98/S66vswP+ihL4QqAK/k5KqreWOxof09+JG7N/A==
