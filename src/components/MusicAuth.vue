@@ -159,14 +159,14 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 export default {
     name: 'MusicAuth',
     methods: {
         ...mapMutations(['toggleAuthModal'])
     },
     computed: {
-        authModalShow() { return this.$store.getters.authModalShow; }
+        ...mapGetters(['authModalShow'])
     }
 }
 </script>
