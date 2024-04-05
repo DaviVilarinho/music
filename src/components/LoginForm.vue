@@ -1,6 +1,5 @@
 <template>
   <!-- Login Form -->
-
   <div
     v-if="reg_show_alert"
     class="text-white text-center font-bold p-5 mb-4"
