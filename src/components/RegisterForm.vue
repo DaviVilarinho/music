@@ -154,7 +154,8 @@ const BG_CREATING = 'bg-blue-500';
 const CREATED_MESSAGE = 'Success! Your account has been created.';
 const BG_CREATED = 'bg-green-500';
 
-const NOT_CREATED_MESSAGE = 'An error occured... Try submitting later!';
+const NOT_CREATED_MESSAGE = 'An error occured creating your user... Try submitting again!';
+const DATA_NOT_INFORMED_MESSAGE = 'An error occured submitting your data... Try submitting again!';
 const BG_NOT_CREATED = 'bg-red-500';
 
 export default {
@@ -196,12 +197,20 @@ export default {
         return;
       }
 
-      // skips the "Unused variable" warning
       let userDocContent = Object(registrationForm);
       delete userDocContent.password;
       delete userDocContent.confirm_password;
+      try {
+        await setDoc(doc(db, "users", userCredentials.user.uid), userDocContent);
+      } catch (error) {
+        auth.currentUser?.delete();
+        this.reg_in_submission = false;
+        this.reg_alert_variant = BG_NOT_CREATED;
+        this.reg_alert_message = DATA_NOT_INFORMED_MESSAGE;
+        return;
+      }
 
-      await setDoc(doc(db, "users", userCredentials.user.uid), userDocContent);
+      this.$state.commit('toggleAuth');
 
       this.reg_alert_variant = BG_CREATED;
       this.reg_alert_message = CREATED_MESSAGE;
