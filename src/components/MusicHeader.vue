@@ -8,7 +8,7 @@
       <router-link
         class="text-white font-bold uppercase text-2xl mr-4"
         exact-active-class="no-active"
-        to="/"
+        :to="{name: 'home'}"
       >
         Music
       </router-link>
@@ -20,7 +20,7 @@
           <li>
             <router-link
               class="px-2 text-white"
-              to="/about"
+              :to="{name: 'about'}"
             >
               About
             </router-link>
@@ -36,7 +36,7 @@
             <li>
               <router-link
                 class="px-2 text-white"
-                to="/manage"
+                :to="{name: 'manage'}"
               >
                 Manage
               </router-link>
