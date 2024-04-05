@@ -144,8 +144,9 @@
 </template>
 
 <script>
+import { auth, db } from '@/includes/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import auth from '@/includes/firebase';
+import { doc, setDoc } from "firebase/firestore"; 
 
 const CREATING_MESSAGE = 'Your account is being created';
 const BG_CREATING = 'bg-blue-500';
@@ -187,14 +188,20 @@ export default {
 
       let userCredentials;
       try {
-        userCredentials = createUserWithEmailAndPassword(auth.auth, registrationForm.email, registrationForm.password);
+        userCredentials = await createUserWithEmailAndPassword(auth, registrationForm.email, registrationForm.password);
       } catch (error) {
         this.reg_in_submission = false;
         this.reg_alert_variant = BG_NOT_CREATED;
         this.reg_alert_message = NOT_CREATED_MESSAGE;
         return;
       }
-      console.log(userCredentials);
+
+      // skips the "Unused variable" warning
+      let userDocContent = Object(registrationForm);
+      delete userDocContent.password;
+      delete userDocContent.confirm_password;
+
+      await setDoc(doc(db, "users", userCredentials.user.uid), userDocContent);
 
       this.reg_alert_variant = BG_CREATED;
       this.reg_alert_message = CREATED_MESSAGE;
