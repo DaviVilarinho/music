@@ -1,11 +1,11 @@
 <template>
   <!-- Login Form -->
   <div
-    v-if="reg_show_alert"
+    v-if="login_show_alert"
     class="text-white text-center font-bold p-5 mb-4"
-    :class="reg_alert_variant"
+    :class="login_alert_variant"
   >
-    {{ reg_alert_message }}
+    {{ login_alert_message }}
   </div>
   <vee-form
     :validation-schema="schema"
@@ -51,7 +51,7 @@
       <button
         type="submit"
         class="block mt-6 w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
-        :disabled="reg_in_submission"
+        :disabled="login_submission"
       >
         Submit
       </button>
@@ -74,22 +74,22 @@ export default {
         email: 'required|email',
         password: 'required|min:3|max:100',
       },
-      reg_in_submission: false,
-      reg_show_alert: false,
-      reg_alert_variant: BG_LOGGING_IN,
-      reg_alert_message: LOGGING_IN_MESSAGE
+      login_submission: false,
+      login_show_alert: false,
+      login_alert_variant: BG_LOGGING_IN,
+      login_alert_message: LOGGING_IN_MESSAGE
     }
   },
   methods: {
     login(loginForm) {
-      this.reg_show_alert = true;
-      this.reg_in_submission = true;
-      this.reg_alert_variant = BG_LOGGING_IN;
-      this.reg_alert_message = LOGGING_IN_MESSAGE;
+      this.login_show_alert = true;
+      this.login_submission = true;
+      this.login_alert_variant = BG_LOGGING_IN;
+      this.login_alert_message = LOGGING_IN_MESSAGE;
 
       console.log(loginForm);
-      this.reg_alert_variant = BG_LOGGED;
-      this.reg_alert_message = LOGGED_MESSAGE;
+      this.login_alert_variant = BG_LOGGED;
+      this.login_alert_message = LOGGED_MESSAGE;
     }
   },
 }
