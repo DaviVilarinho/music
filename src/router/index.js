@@ -18,7 +18,12 @@ const routes = [
     path: '/manage',
     /*alias: '/manage-music',*/
     name: 'manage',
-    component: ManageView
+    component: ManageView,
+    /*
+    beforeEnter: (to, from, next) => {
+      next();
+    } // validation before entering on SPECIFIC Route
+    */
   },
   {
     path: '/manage-music',
@@ -35,5 +40,7 @@ const router = createRouter({
   routes,
   linkExactActiveClass: 'text-yellow-500'
 })
+
+/*router.beforeEach((to, from, next) => {}) // if it needs to be run before each route */
 
 export default router

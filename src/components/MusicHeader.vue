@@ -56,13 +56,16 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapActions } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
     name: 'MusicHeader',
     methods: {
       ...mapMutations(['toggleAuthModal']),
-      ...mapActions(['logout'])
+      async logout() {
+        await this.$store.dispatch('logout');
+        this.$router.push({ name: 'home' });
+      }
     },
     computed: {
       ...mapState(['userLoggedIn'])
