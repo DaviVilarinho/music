@@ -66,6 +66,9 @@ const BG_LOGGING_IN = 'bg-blue-500';
 const LOGGED_MESSAGE = 'Success! You are now authenticated!';
 const BG_LOGGED = 'bg-green-500';
 
+const NOT_LOGGED_MESSAGE = 'Error! Try to authenticate again!';
+const BG_NOT_LOGGED = 'bg-red-500';
+
 export default {
   name: 'LoginForm',
   data() {
@@ -87,7 +90,15 @@ export default {
       this.login_alert_variant = BG_LOGGING_IN;
       this.login_alert_message = LOGGING_IN_MESSAGE;
 
-      await this.$store.dispatch('login', loginForm);
+      try {
+        await this.$store.dispatch('login', loginForm);
+      } catch (error) {
+        this.login_submission = false;
+        this.login_alert_variant = BG_NOT_LOGGED;
+        this.login_alert_message = NOT_LOGGED_MESSAGE;
+
+        return;
+      }
 
       this.login_alert_variant = BG_LOGGED;
       this.login_alert_message = LOGGED_MESSAGE;
