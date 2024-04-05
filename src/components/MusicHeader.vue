@@ -14,25 +14,28 @@
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
-          <li>
-            <span
-              v-if="userLoggedIn"
-              class="px-2 text-white"
-              @click.prevent="this.$store.dispatch('logout')"
-            >Log out</span>
+          <li v-if="!userLoggedIn">
             <a
-              v-else
               class="px-2 text-white"
               href="#"
               @click.prevent="toggleAuthModal"
             >Login / Register</a>
           </li>
-          <li>
-            <a
-              class="px-2 text-white"
-              href="#"
-            >Manage</a>
-          </li>
+          <template v-else>
+            <li>
+              <a
+                class="px-2 text-white"
+                href="#"
+              >Manage</a>
+            </li>
+            <li>
+              <a
+                class="px-2 text-white"
+                @click.prevent="logout"
+              >Log out
+              </a>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
@@ -40,15 +43,16 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 
 export default {
     name: 'MusicHeader',
     methods: {
-      ...mapMutations(['toggleAuthModal'])
+      ...mapMutations(['toggleAuthModal']),
+      ...mapActions(['logout'])
     },
     computed: {
-      ...mapGetters(['userLoggedIn'])
+      ...mapState(['userLoggedIn'])
     },
 }
 </script>

@@ -193,6 +193,8 @@ export default {
 
       this.reg_alert_variant = BG_CREATED;
       this.reg_alert_message = CREATED_MESSAGE;
+
+      window.location.reload();
     }
   },
 }

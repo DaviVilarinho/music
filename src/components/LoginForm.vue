@@ -109,6 +109,8 @@ export default {
         this.login_show_alert = false;
         this.login_submission = false;
       }, 1000);
+
+      window.location.reload();
     }
   },
 }
