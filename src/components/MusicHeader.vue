@@ -15,7 +15,13 @@
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
           <li>
+            <span
+              v-if="this.$store.state.userLoggedIn"
+              class="px-2 text-white"
+              @click.prevent="this.$store.dispatch('logout')"
+            >Log out</span>
             <a
+              v-else
               class="px-2 text-white"
               href="#"
               @click.prevent="toggleAuthModal"

@@ -72,7 +72,7 @@ export default {
     return {
       schema: {
         email: 'required|email',
-        password: 'required|min:3|max:100',
+        password: 'required|min:6|max:100',
       },
       login_submission: false,
       login_show_alert: false,
@@ -81,13 +81,14 @@ export default {
     }
   },
   methods: {
-    login(loginForm) {
+    async login(loginForm) {
       this.login_show_alert = true;
       this.login_submission = true;
       this.login_alert_variant = BG_LOGGING_IN;
       this.login_alert_message = LOGGING_IN_MESSAGE;
 
-      console.log(loginForm);
+      await this.$store.dispatch('login', loginForm);
+
       this.login_alert_variant = BG_LOGGED;
       this.login_alert_message = LOGGED_MESSAGE;
     }

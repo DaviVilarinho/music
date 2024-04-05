@@ -304,6 +304,9 @@ export default {
   components: {
     MusicHeader,
     MusicAuth
+  },
+  created() {
+    this.$store.dispatch('init_login');
   }
 }
 </script>
