@@ -172,15 +172,7 @@
 </template>
 
 <script>
-import store from '@/store';
 export default {
   name: 'ManageView',
-  beforeRouteEnter(to, from, next) {
-    if (store.state.userLoggedIn) {
-      next();
-    } else {
-      next({ name: 'home'});
-    }
-  } // runs last
 };
 </script>

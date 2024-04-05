@@ -2,6 +2,7 @@ import AboutView from '@/views/AboutView.vue'
 import HomeView from '@/views/HomeView.vue'
 import ManageView from '@/views/ManageView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import store from '@/store';
 
 const routes = [
   {
@@ -16,14 +17,11 @@ const routes = [
   },
   {
     path: '/manage',
-    /*alias: '/manage-music',*/
     name: 'manage',
     component: ManageView,
-    /*
-    beforeEnter: (to, from, next) => {
-      next();
-    } // validation before entering on SPECIFIC Route
-    */
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/manage-music',
@@ -41,6 +39,18 @@ const router = createRouter({
   linkExactActiveClass: 'text-yellow-500'
 })
 
-/*router.beforeEach((to, from, next) => {}) // if it needs to be run before each route */
+router.beforeEach((to, from, next) => {
+  if (!to.matched.some(record => record.meta?.requiresAuth)) {
+    next();
+    return;
+  }
+
+  if (store.state.userLoggedIn) {
+    next();
+    return;
+  }
+
+  next({ name: 'home' });
+})
 
 export default router
