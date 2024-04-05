@@ -144,11 +144,17 @@
 </template>
 
 <script>
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import auth from '@/includes/firebase';
+
 const CREATING_MESSAGE = 'Your account is being created';
 const BG_CREATING = 'bg-blue-500';
 
 const CREATED_MESSAGE = 'Success! Your account has been created.';
 const BG_CREATED = 'bg-green-500';
+
+const NOT_CREATED_MESSAGE = 'An error occured... Try submitting later!';
+const BG_NOT_CREATED = 'bg-red-500';
 
 export default {
   name: 'RegisterForm',
@@ -158,7 +164,7 @@ export default {
         name: 'required|min:3|max:100|alpha_spaces',
         email: 'required|email',
         age: 'required|numeric|between:12,150',
-        password: 'required|min:3|max:100',
+        password: 'required|min:6|max:100',
         confirm_password: 'required|passwords_match:@password',
         country: 'required|excluded_location:Antartica',
         tos: 'tos_required'
@@ -173,13 +179,23 @@ export default {
     }
   },
   methods: {
-    register(registrationForm) {
+    async register(registrationForm) {
       this.reg_show_alert = true;
       this.reg_in_submission = true;
       this.reg_alert_variant = BG_CREATING;
       this.reg_alert_message = CREATING_MESSAGE;
 
-      console.log(registrationForm);
+      let userCredentials;
+      try {
+        userCredentials = createUserWithEmailAndPassword(auth.auth, registrationForm.email, registrationForm.password);
+      } catch (error) {
+        this.reg_in_submission = false;
+        this.reg_alert_variant = BG_NOT_CREATED;
+        this.reg_alert_message = NOT_CREATED_MESSAGE;
+        return;
+      }
+      console.log(userCredentials);
+
       this.reg_alert_variant = BG_CREATED;
       this.reg_alert_message = CREATED_MESSAGE;
     }

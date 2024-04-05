@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 /*import { getAnalytics } from "firebase/analytics";*/
 
@@ -22,8 +22,6 @@ const firebaseConfig = {
 
   storageBucket: "music-baf47.appspot.com",
 
-  messagingSenderId: "482674714559",
-
   appId: "1:482674714559:web:32dc3e3184fa23e9e3a30a",
 
   measurementId: "G-5N0J00917C"
@@ -32,9 +30,12 @@ const firebaseConfig = {
 
 
 // Initialize Firebase
-
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+export default {
+  app: app,
+  auth: auth
+}
 
 /*const analytics = getAnalytics(app); */
-
-export default app;
