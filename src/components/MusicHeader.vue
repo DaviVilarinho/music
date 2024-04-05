@@ -16,7 +16,7 @@
           <!-- Navigation Links -->
           <li>
             <span
-              v-if="this.$store.state.userLoggedIn"
+              v-if="userLoggedIn"
               class="px-2 text-white"
               @click.prevent="this.$store.dispatch('logout')"
             >Log out</span>
@@ -40,12 +40,15 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
     name: 'MusicHeader',
     methods: {
       ...mapMutations(['toggleAuthModal'])
-    }
+    },
+    computed: {
+      ...mapGetters(['userLoggedIn'])
+    },
 }
 </script>

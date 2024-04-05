@@ -17,7 +17,8 @@ export default createStore({
     }
   },
   getters: {
-    authModalShow: (state) => state.authModalShow
+    authModalShow: (state) => state.authModalShow,
+    userLoggedIn: (state) => state.userLoggedIn
   },
   actions: {
     async register({ commit }, userForm) {

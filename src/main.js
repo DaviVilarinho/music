@@ -9,9 +9,9 @@ import './assets/main.css'
 let app;
 auth.onAuthStateChanged(() => {
   if (!app) {
-    createApp(App)
+    app = createApp(App)
       .use(store)
       .use(veeValidation)
-      .mount('#app')
+      .mount('#app');
   }
 });

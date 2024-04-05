@@ -102,6 +102,13 @@ export default {
 
       this.login_alert_variant = BG_LOGGED;
       this.login_alert_message = LOGGED_MESSAGE;
+
+      setTimeout(() => {
+        this.$store.commit('toggleAuthModal');
+
+        this.login_show_alert = false;
+        this.login_submission = false;
+      }, 1000);
     }
   },
 }
