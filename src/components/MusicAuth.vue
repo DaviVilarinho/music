@@ -37,8 +37,8 @@
               <a
                 class="block rounded py-3 px-4 transition"
                 :class="{
-                  'hover:text-white text-white bg-blue-600': tab === 'login', 
-                  'hover:text-blue-600': tab === 'register', 
+                  'hover:text-white text-white bg-blue-600': tab === 'login',
+                  'hover:text-blue-600': tab === 'register',
                 }"
                 href="#"
                 @click.prevent="tab = 'login'"
@@ -48,8 +48,8 @@
               <a
                 class="block rounded py-3 px-4 transition"
                 :class="{
-                  'hover:text-white text-white bg-blue-600': tab === 'register', 
-                  'hover:text-blue-600': tab === 'login', 
+                  'hover:text-white text-white bg-blue-600': tab === 'register',
+                  'hover:text-blue-600': tab === 'login',
                 }"
                 href="#"
                 @click.prevent="tab = 'register'"
@@ -58,7 +58,7 @@
           </ul>
 
           <!-- Login Form -->
-          <form v-if="tab === 'login'">
+          <form v-show="tab === 'login'">
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
@@ -85,8 +85,15 @@
             </button>
           </form>
           <!-- Registration Form -->
+          <div
+            v-if="reg_show_alert"
+            class="text-white text-center font-bold p-5 mb-4"
+            :class="reg_alert_variant"
+          >
+            {{ reg_alert_message }}
+          </div>
           <vee-form
-            v-else
+            v-show="tab === 'register'"
             :validation-schema="schema"
             @submit="register"
             :initial-values="userData"
@@ -100,9 +107,9 @@
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name"
               />
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="name" 
+                name="name"
               />
             </div>
             <!-- Email -->
@@ -114,9 +121,9 @@
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Email"
               />
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="email" 
+                name="email"
               />
             </div>
             <!-- Age -->
@@ -128,15 +135,15 @@
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 :validate-on-input="true"
               />
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="age" 
+                name="age"
               />
             </div>
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <vee-field 
+              <vee-field
                 name="password"
                 :bails="false"
                 :validate-on-input="true"
@@ -167,9 +174,9 @@
                 :validate-on-input="true"
                 placeholder="Confirm Password"
               />
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="confirm_password" 
+                name="confirm_password"
               />
             </div>
             <!-- Country -->
@@ -193,9 +200,9 @@
                   Antartica
                 </option>
               </vee-field>
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="country" 
+                name="country"
               />
             </div>
             <!-- TOS -->
@@ -208,13 +215,14 @@
               />
               <label class="inline-block">Accept terms of service</label>
               <br>
-              <VeeErrorMessage 
+              <VeeErrorMessage
                 class="text-red-600"
-                name="tos" 
+                name="tos"
               />
             </div>
             <button
               type="submit"
+              :disabled="reg_in_submission"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
             >
               Submit
@@ -228,33 +236,51 @@
 
 <script>
 import { mapMutations, mapGetters } from 'vuex';
+
+const CREATING_MESSAGE = 'Your account is being created';
+const BG_CREATING = 'bg-blue-500';
+
+const CREATED_MESSAGE = 'Success! Your account has been created.';
+const BG_CREATED = 'bg-green-500';
+
 export default {
-    name: 'MusicAuth',
-    data() {
-        return {
-            tab: 'login',
-            schema: {
-              name: 'required|min:3|max:100|alpha_spaces',
-              email: 'required|email',
-              age: 'required|numeric|between:12,150',
-              password: 'required|min:3|max:100',
-              confirm_password: 'required|passwords_match:@password',
-              country: 'required|excluded_location:Antartica',
-              tos: 'tos_required'
-            },
-            userData: {
-              country: 'USA',
-            }
-        }
-    },
-    methods: {
-        ...mapMutations(['toggleAuthModal']),
-        register(registrationForm) {
-          console.log(registrationForm);
-        }
-    },
-    computed: {
-        ...mapGetters(['authModalShow'])
+  name: 'MusicAuth',
+  data() {
+    return {
+      tab: 'login',
+      schema: {
+        name: 'required|min:3|max:100|alpha_spaces',
+        email: 'required|email',
+        age: 'required|numeric|between:12,150',
+        password: 'required|min:3|max:100',
+        confirm_password: 'required|passwords_match:@password',
+        country: 'required|excluded_location:Antartica',
+        tos: 'tos_required'
+      },
+      userData: {
+        country: 'USA',
+      },
+      reg_in_submission: false,
+      reg_show_alert: false,
+      reg_alert_variant: BG_CREATING,
+      reg_alert_message: CREATING_MESSAGE
     }
+  },
+  methods: {
+    ...mapMutations(['toggleAuthModal']),
+    register(registrationForm) {
+      this.reg_show_alert = true;
+      this.reg_in_submission = true;
+      this.reg_alert_variant = BG_CREATING;
+      this.reg_alert_message = CREATING_MESSAGE;
+
+      console.log(registrationForm);
+      this.reg_alert_variant = BG_CREATED;
+      this.reg_alert_message = CREATED_MESSAGE;
+    }
+  },
+  computed: {
+    ...mapGetters(['authModalShow'])
+  }
 }
 </script>
