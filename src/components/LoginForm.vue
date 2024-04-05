@@ -66,7 +66,7 @@ const BG_LOGGING_IN = 'bg-blue-500';
 const LOGGED_MESSAGE = 'Success! You are now authenticated!';
 const BG_LOGGED = 'bg-green-500';
 
-const NOT_LOGGED_MESSAGE = 'Error! Try to authenticate again!';
+const NOT_LOGGED_MESSAGE = 'It was not possible to authenticate!';
 const BG_NOT_LOGGED = 'bg-red-500';
 
 export default {
