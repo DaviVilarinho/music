@@ -64,7 +64,9 @@ export default {
       ...mapMutations(['toggleAuthModal']),
       async logout() {
         await this.$store.dispatch('logout');
-        this.$router.push({ name: 'home' });
+        if (this.$route.name === 'manage') {
+          this.$router.push({ name: 'home' });
+        }
       }
     },
     computed: {
