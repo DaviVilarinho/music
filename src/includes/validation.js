@@ -36,7 +36,11 @@ export default {
         };
 
         return messages[context.rule.name] ?? `The field ${context.field} is not valid.`;
-      }
+      },
+      validateOnBlur: true,
+      validateOnChange: true,
+      validateOnInput: false,
+      validateOnModelUpdate: true
     });
   }
 }

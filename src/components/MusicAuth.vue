@@ -126,6 +126,7 @@
                 name="age"
                 type="number"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+                :validate-on-input="true"
               />
               <VeeErrorMessage 
                 class="text-red-600"
@@ -138,6 +139,7 @@
               <vee-field 
                 name="password"
                 :bails="false"
+                :validate-on-input="true"
                 v-slot="{ field, errors }"
               >
                 <input
@@ -162,6 +164,7 @@
                 name="confirm_password"
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+                :validate-on-input="true"
                 placeholder="Confirm Password"
               />
               <VeeErrorMessage 
