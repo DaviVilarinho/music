@@ -63,6 +63,9 @@
 </template>
 
 <script>
+import { storage } from '@/includes/firebase';
+import { ref, uploadBytes } from 'firebase/storage';
+
 export default {
   name: 'UploadMusic',
   data() {
@@ -78,6 +81,11 @@ export default {
         if (file.type !== 'audio/mpeg') {
           return;
         }
+        const storageRef = ref(storage, `songs/${file.name}`);
+
+        uploadBytes(storageRef, file).then(() => {
+          this.isDragOver = false;
+        });
       });
 
       this.isDragOver = false;
