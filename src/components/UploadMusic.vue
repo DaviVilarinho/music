@@ -22,39 +22,20 @@
         <h5>Drop your files here</h5>
       </div>
       <hr class="my-6">
-      <!-- Progess Bars -->
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        v-for="(uploadObject, filename) in uploads"
+        :key="filename"
+      >
         <!-- File Name -->
         <div class="font-bold text-sm">
-          Just another song.mp3
+          {{ filename }}
         </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
           <div
             class="transition-all progress-bar bg-blue-400"
-            style="width: 75%"
-          />
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">
-          Just another song.mp3
-        </div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div
-            class="transition-all progress-bar bg-blue-400"
-            style="width: 35%"
-          />
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">
-          Just another song.mp3
-        </div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div
-            class="transition-all progress-bar bg-blue-400"
-            style="width: 55%"
+            :style="{ width: uploadObject.currentProgress + '%' }"
           />
         </div>
       </div>
@@ -64,13 +45,14 @@
 
 <script>
 import { storage } from '@/includes/firebase';
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytesResumable } from 'firebase/storage';
 
 export default {
   name: 'UploadMusic',
   data() {
     return {
-      isDragOver: false
+      isDragOver: false,
+      uploads: {}
     };
   },
   methods: {
@@ -83,9 +65,22 @@ export default {
         }
         const storageRef = ref(storage, `songs/${file.name}`);
 
-        uploadBytes(storageRef, file).then(() => {
-          this.isDragOver = false;
-        });
+        const task = uploadBytesResumable(storageRef, file);
+
+        this.uploads[file.name] = {
+          task,
+          currentProgress: 0,
+          name: file.name
+        };
+
+        task.on('state_changed', (snapshot) => {
+          this.uploads[file.name].currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+          (error) => { console.log(error) },
+          () => {
+            this.isDragOver = false;
+          }
+        );
       });
 
       this.isDragOver = false;
