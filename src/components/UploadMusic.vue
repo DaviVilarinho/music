@@ -48,8 +48,9 @@
 </template>
 
 <script>
-import { storage } from '@/includes/firebase';
-import { ref, uploadBytesResumable } from 'firebase/storage';
+import { storage, auth, db } from '@/includes/firebase';
+import { addDoc, collection } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 export default {
   name: 'UploadMusic',
@@ -90,7 +91,20 @@ export default {
             this.uploads[file.name].variant = 'bg-red-400';
             this.uploads[file.name].icon = 'fas fa-times';
           },
-          () => {
+          async () => {
+            const song = {
+              uid: auth.currentUser.uid,
+              display_name: auth.currentUser.displayName,
+              original_name: task.snapshot.ref.name,
+              modified_name: task.snapshot.ref.name,
+              genre: '',
+              comment_count: 0
+            };
+
+            song.url = await getDownloadURL(task.snapshot.ref);
+
+            await addDoc(collection(db, "songs"), song);
+
             this.isDragOver = false;
             this.uploads[file.name].text_class = 'text-green-400';
             this.uploads[file.name].variant = 'bg-green-400';
