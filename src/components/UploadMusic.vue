@@ -10,6 +10,14 @@
         class="w-full px-10 py-20 rounded text-center cursor-pointer border border-dashed
                 border-gray-400 text-gray-400 transition duration-500 hover:text-white
                 hover:bg-green-400 hover:border-green-400 hover:border-solid"
+        :class="{ 'bg-green-400 border-green-400 border-solid': isDragOver }"
+        @drag.prevent.stop=""
+        @dragstart.prevent.stop=""
+        @dragover.prevent.stop="isDragOver = true"
+        @dragenter.prevent.stop="isDragOver = true"
+        @dragend.prevent.stop="isDragOver = false"
+        @dragleave.prevent.stop="isDragOver = false"
+        @drop.prevent.stop="upload($event)"
       >
         <h5>Drop your files here</h5>
       </div>
@@ -56,6 +64,24 @@
 
 <script>
 export default {
-  name: 'UploadMusic'
+  name: 'UploadMusic',
+  data() {
+    return {
+      isDragOver: false
+    };
+  },
+  methods: {
+    upload($event) {
+      const files = [...$event.dataTransfer.files];
+
+      files.forEach((file) => {
+        if (file.type !== 'audio/mpeg') {
+          return;
+        }
+      });
+
+      this.isDragOver = false;
+    }
+  }
 }
 </script>
