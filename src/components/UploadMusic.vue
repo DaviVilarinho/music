@@ -86,11 +86,13 @@ export default {
           },
           (error) => { 
             this.isDragOver = false;
+            this.uploads[file.name].text_class = 'text-red-400';
             this.uploads[file.name].variant = 'bg-red-400';
             this.uploads[file.name].icon = 'fas fa-times';
           },
           () => {
             this.isDragOver = false;
+            this.uploads[file.name].text_class = 'text-green-400';
             this.uploads[file.name].variant = 'bg-green-400';
             this.uploads[file.name].icon = 'fas fa-check';
           }
