@@ -80,14 +80,19 @@ export default {
           text_class: ''
         };
 
-        task.on('state_changed', (snapshot) => {
-          this.uploads[file.name].currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-          (error) => { console.log(error) },
+        task.on('state_changed', 
+          (snapshot) => {
+            this.uploads[file.name].currentProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          },
+          (error) => { 
+            this.isDragOver = false;
+            this.uploads[file.name].variant = 'bg-red-400';
+            this.uploads[file.name].icon = 'fas fa-times';
+          },
           () => {
             this.isDragOver = false;
-            this.uploads[file.name].variant = 'bg-green-400',
-            this.uploads[file.name].icon = ''
+            this.uploads[file.name].variant = 'bg-green-400';
+            this.uploads[file.name].icon = 'fas fa-check';
           }
         );
       });
