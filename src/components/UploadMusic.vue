@@ -28,13 +28,17 @@
         :key="filename"
       >
         <!-- File Name -->
-        <div class="font-bold text-sm">
-          {{ filename }}
+        <div 
+          class="font-bold text-sm" 
+          :class="uploadObject.text_class"
+        >
+          <i :class="uploadObject.icon" /> {{ filename }}
         </div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <!-- Inner Progress Bar -->
           <div
             class="transition-all progress-bar bg-blue-400"
+            :class="uploadObject.variant"
             :style="{ width: uploadObject.currentProgress + '%' }"
           />
         </div>
@@ -70,7 +74,10 @@ export default {
         this.uploads[file.name] = {
           task,
           currentProgress: 0,
-          name: file.name
+          name: file.name,
+          variant: 'bg-blue-400',
+          icon: 'fas fa-spinner fa-spin',
+          text_class: ''
         };
 
         task.on('state_changed', (snapshot) => {
@@ -79,6 +86,8 @@ export default {
           (error) => { console.log(error) },
           () => {
             this.isDragOver = false;
+            this.uploads[file.name].variant = 'bg-green-400',
+            this.uploads[file.name].icon = ''
           }
         );
       });
