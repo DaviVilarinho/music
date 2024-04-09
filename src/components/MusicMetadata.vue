@@ -29,6 +29,10 @@
             placeholder="Enter Song Title"
             name="modified_name"
           />
+          <vee-error-message
+            class="text-red-600"
+            name="modified_name"
+          />
         </div>
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
@@ -39,7 +43,7 @@
             placeholder="Enter Genre"
             name="genre"
           />
-          <VeeErrorMessage
+          <vee-error-message
             class="text-red-600"
             name="genre"
           />
