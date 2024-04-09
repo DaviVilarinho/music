@@ -2,7 +2,7 @@
   <div class="border border-gray-200 p-3 mb-4 rounded">
     <div v-show="!showForm">
       <h4 class="inline-block text-2xl font-bold">
-        {{ song.display_name ?? song.modified_name }}
+        {{ song.modified_name }}
       </h4>
       <button class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right">
         <i class="fa fa-times" />
@@ -27,7 +27,7 @@
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300
                         transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
-            name="display_name"
+            name="modified_name"
           />
         </div>
         <div class="mb-3">
@@ -78,8 +78,8 @@ export default {
     return {
       showForm: false,
       schema: {
-        display_name: 'min:1|max:100',
-        genre: 'min:5|max:100',
+        modified_name: 'required|min:1|max:100',
+        genre: 'min:5|max:100|alpha_spaces',
       },
       reg_in_submission: false,
     };
