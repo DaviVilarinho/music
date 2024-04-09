@@ -21,6 +21,22 @@
       >
         <h5>Drop your files here</h5>
       </div>
+      <div>
+        <input 
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          aria-describedby="file_input_help"
+          id="file_input"
+          type="file"
+          multiple
+          @change="upload($event)"
+        >
+        <p 
+          class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+          id="file_input_help"
+        >
+          MP3 (Max 10Mb).
+        </p>
+      </div>
       <hr class="my-6">
       <div
         class="mb-4"
@@ -62,7 +78,7 @@ export default {
   },
   methods: {
     upload($event) {
-      const files = [...$event.dataTransfer.files];
+      const files = [...($event.dataTransfer?.files ?? $event.target?.files)];
 
       files.forEach((file) => {
         if (file.type !== 'audio/mpeg') {
@@ -115,6 +131,9 @@ export default {
 
       this.isDragOver = false;
     }
+  },
+  beforeUnmount() {
+    Object.values(this.uploads).forEach(upload => upload.task.cancel());
   }
 }
 </script>
