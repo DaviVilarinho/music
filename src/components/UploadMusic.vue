@@ -67,7 +67,7 @@
 import { storage, auth, db } from '@/includes/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'UploadMusic',
@@ -76,6 +76,9 @@ export default {
       isDragOver: false,
       uploads: {}
     };
+  },
+  computed: {
+    ...mapGetters(['songs']),
   },
   methods: {
     ...mapMutations(['addSong']),

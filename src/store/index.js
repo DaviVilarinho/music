@@ -29,7 +29,7 @@ export default createStore({
   },
   getters: {
     authModalShow: (state) => state.authModalShow,
-    songsObject: (state) => state.songs,
+    songs: (state) => state.songs
   },
   actions: {
     async querySongsByUser({ commit }) {
@@ -47,7 +47,7 @@ export default createStore({
       commit('setSongs', { newSongs: newSongs } );
     },
     async deleteSongById({ commit, getters }, { docID }) {
-      await deleteObject(ref(storage, `songs/${getters.songsObject[docID]['original_name']}`));
+      await deleteObject(ref(storage, `songs/${getters.songs[docID]['original_name']}`));
       await deleteDoc(doc(db, `songs/${docID}` ));
       commit('delSong', { docID: docID });
     },

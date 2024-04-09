@@ -28,13 +28,13 @@
 <script>
 import UploadMusic from '@/components/UploadMusic.vue';
 import MusicMetadata from '@/components/MusicMetadata.vue';
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ManageView',
   components: { UploadMusic, MusicMetadata },
   computed: {
-    ...mapState(['songs']),
+    ...mapGetters(['songs']),
   },
   methods: {
     ...mapActions(['querySongsByUser']),
