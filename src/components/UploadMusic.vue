@@ -67,6 +67,7 @@
 import { storage, auth, db } from '@/includes/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'UploadMusic',
@@ -77,6 +78,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['querySongsByUser']),
     upload($event) {
       const files = [...($event.dataTransfer?.files ?? $event.target?.files)];
 
@@ -125,6 +127,9 @@ export default {
             this.uploads[file.name].text_class = 'text-green-400';
             this.uploads[file.name].variant = 'bg-green-400';
             this.uploads[file.name].icon = 'fas fa-check';
+
+            
+            await this.querySongsByUser();
           }
         );
       });
