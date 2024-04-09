@@ -27,29 +27,20 @@
 
 <script>
 import UploadMusic from '@/components/UploadMusic.vue';
-import { db, auth } from '@/includes/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import MusicMetadata from '@/components/MusicMetadata.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'ManageView',
   components: { UploadMusic, MusicMetadata },
-  data() {
-    return {
-      songs: [],
-    }
+  computed: {
+    ...mapState(['songs']),
+  },
+  methods: {
+    ...mapActions(['querySongsByUser']),
   },
   async created() {
-    const snapshots = await getDocs(
-      query(collection(db, "songs"), where('uid', '==', auth.currentUser.uid)));
-
-    snapshots.forEach(snapshot => {
-      this.songs.push({
-        ...snapshot.data(),
-        docID: snapshot.id
-      });
-    });
-
-  }
+    await this.querySongsByUser();
+  },
 };
 </script>

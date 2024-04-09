@@ -15,6 +15,13 @@
       </button>
     </div>
     <div v-show="showForm">
+      <div
+        class="text-white text-center font-bold p-4 mb-4"
+        :class="alertVariant"
+        v-if="showAlert"
+      >
+        {{ alertMessage }}
+      </div>
       <vee-form 
         :validation-schema="schema"
         @submit="updateSong"
@@ -51,7 +58,7 @@
         <button
           type="submit"
           class="py-1.5 px-3 rounded text-white bg-green-600"
-          :disabled="reg_in_submission"
+          :disabled="in_submission"
         >
           Submit
         </button>
@@ -59,6 +66,7 @@
           type="button"
           class="py-1.5 px-3 rounded text-white bg-gray-600"
           @click.prevent="showForm = !showForm"
+          :disabled="in_submission"
         >
           Go Back
         </button>
@@ -70,12 +78,43 @@
 <script>
 import { db } from '@/includes/firebase';
 import { setDoc, doc } from 'firebase/firestore';
+import { mapMutations } from 'vuex';
+
+const SENDING_MESSAGE = 'Editing...';
+const SENDING_VARIANT = 'bg-blue-400';
+
+const SENT_MESSAGE = 'Succesfully Edited!';
+const SENT_VARIANT = 'bg-green-400';
+
+const NOT_SENT_MESSAGE = 'Could not edit.';
+const NOT_SENT_VARIANT = 'bg-red-400';
 
 export default {
   name: 'MusicMetadata',
   methods: {
     async updateSong(songFormData) {
-      await setDoc(doc(db, 'songs', this.song.docID), songFormData, {merge: true});
+      this.in_submission = true;
+
+      this.showAlert = true;
+      this.alertMessage = SENDING_MESSAGE;
+      this.alertVariant = SENDING_VARIANT;
+
+      try {
+        await setDoc(doc(db, 'songs', this.song.docID), songFormData, {merge: true});
+        this.alertMessage = SENT_MESSAGE;
+        this.alertVariant = SENT_VARIANT;
+        
+        this.$store.commit('changeSong', { 
+          i: this.song.docID, 
+          modified_name: songFormData.modified_name,
+          genre: songFormData.genre,
+        });
+      } catch (error) {
+        this.alertMessage = NOT_SENT_MESSAGE;
+        this.alertVariant = NOT_SENT_VARIANT;
+      }
+
+      this.in_submission = false
     }
   },
   data() {
@@ -85,7 +124,10 @@ export default {
         modified_name: 'required|min:1|max:100',
         genre: 'min:5|max:100|alpha_spaces',
       },
-      reg_in_submission: false,
+      in_submission: false,
+      showAlert: false,
+      alertMessage: '',
+      alertVariant: '',
     };
   },
   props: {
