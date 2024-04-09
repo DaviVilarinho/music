@@ -121,9 +121,28 @@
 
 <script>
 import UploadMusic from '@/components/UploadMusic.vue';
+import { db, auth } from '@/includes/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default {
   name: 'ManageView',
-  components: {UploadMusic}
+  components: { UploadMusic },
+  data() {
+    return {
+      songs: [],
+    }
+  },
+  async created() {
+    const snapshots = await getDocs(
+      query(collection(db, "songs"), where('uid', '==', auth.currentUser.uid)));
+
+    snapshots.forEach(snapshot => {
+      this.songs.push({
+        ...snapshot.data(),
+        docID: snapshot.id
+      });
+    });
+
+  }
 };
 </script>
