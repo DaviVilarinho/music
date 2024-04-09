@@ -21,6 +21,9 @@ export default createStore({
       state.songs[docID].modified_name = modified_name;
       state.songs[docID].genre = genre;
     },
+    addSong: (state, {docID , song}) => {
+      state.songs[docID] = song;
+    },
     setSongs: (state, { newSongs }) => { state.songs = newSongs; },
     delSong: (state, { docID }) => { delete state.songs[docID] }
   },
@@ -44,7 +47,6 @@ export default createStore({
       commit('setSongs', { newSongs: newSongs } );
     },
     async deleteSongById({ commit, getters }, { docID }) {
-      console.log('deleting', getters.songsObject[docID]);
       await deleteObject(ref(storage, `songs/${getters.songsObject[docID]['original_name']}`));
       await deleteDoc(doc(db, `songs/${docID}` ));
       commit('delSong', { docID: docID });

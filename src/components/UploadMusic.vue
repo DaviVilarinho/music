@@ -67,7 +67,7 @@
 import { storage, auth, db } from '@/includes/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'UploadMusic',
@@ -78,7 +78,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['querySongsByUser']),
+    ...mapMutations(['addSong']),
     upload($event) {
       const files = [...($event.dataTransfer?.files ?? $event.target?.files)];
 
@@ -121,7 +121,7 @@ export default {
 
             song.url = await getDownloadURL(task.snapshot.ref);
 
-            await addDoc(collection(db, "songs"), song);
+            const docSnapshot = await addDoc(collection(db, "songs"), song);
 
             this.isDragOver = false;
             this.uploads[file.name].text_class = 'text-green-400';
@@ -129,7 +129,7 @@ export default {
             this.uploads[file.name].icon = 'fas fa-check';
 
             
-            await this.querySongsByUser();
+            this.addSong({ docID: docSnapshot.id, song: song } );
           }
         );
       });
