@@ -18,6 +18,7 @@
       <vee-form 
         :validation-schema="schema"
         @submit="updateSong"
+        :initial-values="song"
       >
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
@@ -70,7 +71,6 @@ export default {
   name: 'MusicMetadata',
   methods: {
     async updateSong(songFormData) {
-      console.log(songFormData);
       await setDoc(doc(db, 'songs', this.song.docID), songFormData, {merge: true});
     }
   },
