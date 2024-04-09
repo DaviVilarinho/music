@@ -29,6 +29,7 @@
         :validation-schema="schema"
         @submit="updateSong"
         :initial-values="song"
+        @input="updateUnsavedFlag(true)"
       >
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
@@ -38,6 +39,7 @@
                         transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
             name="modified_name"
+            @input="updateUnsavedFlag(true)"
           />
           <vee-error-message
             class="text-red-600"
@@ -52,6 +54,7 @@
                         transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
             name="genre"
+            @input="updateUnsavedFlag(true)"
           />
           <vee-error-message
             class="text-red-600"
@@ -117,6 +120,7 @@ export default {
       }
 
       this.in_submission = false
+      this.updateUnsavedFlag(false);
     }
   },
   data() {
@@ -135,6 +139,10 @@ export default {
   props: {
     song: {
       type: Object,
+      required: true
+    },
+    updateUnsavedFlag: {
+      type: Function,
       required: true
     }
   }

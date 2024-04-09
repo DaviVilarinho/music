@@ -17,6 +17,7 @@
               v-for="song in songs"
               :key="song.docID"
               :song="song"
+              :update-unsaved-flag="updateUnsavedFlag"
             />
           </div>
         </div>
@@ -36,11 +37,28 @@ export default {
   computed: {
     ...mapGetters(['songs']),
   },
+  data() {
+    return {
+      unsavedFlag: false,
+    };
+  },
   methods: {
     ...mapActions(['querySongsByUser']),
+    updateUnsavedFlag(value) {
+      this.unsavedFlag = value;
+    }
   },
   async created() {
     await this.querySongsByUser();
   },
+  beforeRouteLeave(to, from, next) {
+    if (this.unsavedFlag) {
+      const leave = confirm('You have not submitted your changes. Are you sure you want to leave?');
+      if (!leave) {
+        return;
+      }
+    }
+    next();
+  }
 };
 </script>
