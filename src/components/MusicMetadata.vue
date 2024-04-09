@@ -65,7 +65,7 @@
         <button
           type="button"
           class="py-1.5 px-3 rounded text-white bg-gray-600"
-          @click.prevent="showForm = !showForm"
+          @click.prevent="showForm = !showForm ; showAlert = false"
           :disabled="in_submission"
         >
           Go Back
@@ -78,7 +78,6 @@
 <script>
 import { db } from '@/includes/firebase';
 import { setDoc, doc } from 'firebase/firestore';
-import { mapMutations } from 'vuex';
 
 const SENDING_MESSAGE = 'Editing...';
 const SENDING_VARIANT = 'bg-blue-400';
