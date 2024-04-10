@@ -19,7 +19,7 @@
         <div class="text-3xl font-bold">
           {{ songData?.modified_name }}
         </div>
-        <div>{{ songData?.display_name }}</div>
+        <div>{{ songData?.genre }}</div>
       </div>
     </div>
   </section>
