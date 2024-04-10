@@ -28,23 +28,40 @@
     <div class="bg-white rounded border border-gray-200 relative flex flex-col">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <!-- Comment Count -->
-        <span class="card-title">Comments (15)</span>
+        <span class="card-title">Comments ({{ comments?.length ?? 0 }})</span>
         <i class="fa fa-comments float-right text-green-400 text-2xl" />
       </div>
       <div class="p-6">
-        <form>
-          <textarea
+        <div
+          v-if="commentShowAlert"
+          class="text-white text-center font-bold p-5 mb-4"
+          :class="commentAlertVariant"
+        >
+          {{ commentAlertText }}
+        </div>
+        <vee-form 
+          :schema="schema"
+          @submit="addComment"
+        >
+          <vee-field
+            as="textarea"
+            name="comment"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
               duration-500 focus:outline-none focus:border-black rounded mb-4"
             placeholder="Your comment here..."
           />
+          <VeeErrorMessage
+            class="text-red-600"
+            name="comment"
+          />
           <button
             type="submit"
             class="py-1.5 px-3 rounded text-white bg-green-600 block"
+            :disabled="commentInSubmission"
           >
             Submit
           </button>
-        </form>
+        </vee-form>
         <!-- Sort Comments -->
         <select
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition
@@ -61,115 +78,112 @@
     </div>
   </section>
   <!-- Comments -->
-  <ul class="container mx-auto">
-    <li class="p-6 bg-gray-50 border border-gray-200">
+  <ul class="container mx-auto mb-32">
+    <li 
+      class="p-6 bg-gray-50 border border-gray-200" 
+      v-for="userComment in comments"
+      :key="userComment.commentId" 
+    >
       <!-- Comment Author -->
-      <div class="mb-5">
+      <div
+        class="mb-5"
+      >
         <div class="font-bold">
-          Elaine Dreyfuss
+          {{ userComment.name }}
         </div>
-        <time>5 mins ago</time>
+        <time class="text-slate-300">at {{ (new Date(userComment.datePosted)).toLocaleString() }}</time>
       </div>
 
       <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">
-          Elaine Dreyfuss
-        </div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">
-          Elaine Dreyfuss
-        </div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">
-          Elaine Dreyfuss
-        </div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">
-          Elaine Dreyfuss
-        </div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
-      </p>
-    </li>
-    <li class="p-6 bg-gray-50 border border-gray-200">
-      <!-- Comment Author -->
-      <div class="mb-5">
-        <div class="font-bold">
-          Elaine Dreyfuss
-        </div>
-        <time>5 mins ago</time>
-      </div>
-
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium der doloremque laudantium.
+        {{ userComment.content }}
       </p>
     </li>
   </ul>
 </template>
 
 <script>
-import { db } from '@/includes/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '@/includes/firebase';
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
+
+const COMMENT_SUBMITTING_VARIANT = 'bg-blue-400';
+const COMMENT_SUBMITTING_TEXT = 'Commenting...'
+
+const COMMENT_SUBMITTED_VARIANT = 'bg-green-400';
+const COMMENT_SUBMITTED_TEXT = 'Succesfully added comment.'
+
+const COMMENT_NOT_SUBMITTED_VARIANT = 'bg-red-400';
+const COMMENT_NOT_SUBMITTED_TEXT = 'Could not add comment, try again later.'
 
 export default {
   name: 'SongView',
   data() {
     return {
-      songData: {}
+      songData: {},
+      comments: [],
+      schema: {
+        comment: 'required|min:3|max:250'
+      },
+      commentInSubmission: false,
+      commentShowAlert: false,
+      commentAlertVariant: COMMENT_SUBMITTING_VARIANT,
+      commentAlertText: COMMENT_SUBMITTING_TEXT,
+
+    }
+  },
+  methods: {
+    async addComment(formValue) {
+      this.commentInSubmission = true;
+      this.commentShowAlert = true;
+      this.commentAlertVariant = COMMENT_SUBMITTING_VARIANT;
+      this.commentAlertText = COMMENT_SUBMITTING_TEXT;
+
+      const comment = {
+        content: formValue.comment,
+        datePosted: new Date().toString(),
+        songId: this.$route.params.id,
+        name: auth.currentUser?.displayName ?? '[private]',
+        uid: auth.currentUser?.uid
+      }
+
+      try {
+        await addDoc(collection(db, `comments/${this.$route.params.id}/songComments`), comment);
+        this.comments.push(comment);
+
+        this.commentAlertVariant = COMMENT_SUBMITTED_VARIANT;
+        this.commentAlertText = COMMENT_SUBMITTED_TEXT;
+
+        await setDoc(doc(db, `songs/${this.$route.params.id}`), {comment_count: this.comments.length} , {merge: true})
+      } catch (error) {
+        this.commentAlertVariant = COMMENT_NOT_SUBMITTED_VARIANT;
+        this.commentAlertText = COMMENT_NOT_SUBMITTED_TEXT;
+      }
+
+      
+      this.commentInSubmission = false;
+    },
+    async getSongData() {
+      const snapshot = await getDoc(doc(db, `songs/${this.$route.params.id}`));
+
+      if (!snapshot.exists()) {
+        this.$router.push({ name: 'home' });
+      }
+
+      this.songData = snapshot.data();
+    },
+    async getCommentData() { 
+      const snapshots = await getDocs(
+        collection(db, `comments/${this.$route.params.id}/songComments`), 
+        query(orderBy('datePosted')));
+
+      const newComments = [];
+      snapshots.forEach(snapshot => newComments.push({... snapshot.data(), commentId: snapshot.id}));
+
+      this.comments = newComments;
     }
   },
   async created() {
-    const snapshot = await getDoc(doc(db, `songs/${this.$route.params.id}`));
-
-    console.log(`songs/${this.$route.params.id }`);
-    if (!snapshot.exists()) {
-      console.log(snapshot.exists());
-      this.$router.push({ name: 'home' });
-    }
-
-    this.songData = snapshot.data();
+    await this.getSongData();
+    await this.getCommentData();
   },
 }
 </script>
