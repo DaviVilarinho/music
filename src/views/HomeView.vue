@@ -27,7 +27,7 @@
 
   <!-- Main Content -->
   <section class="container mx-auto">
-    <div class="bg-white rounded border border-gray-200 relative flex flex-col">
+    <div class="bg-white rounded border border-gray-200 relative flex flex-col m-8 mb-32 pb-4">
       <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
         <span class="card-title">Songs</span>
         <!-- Icon -->
@@ -48,8 +48,8 @@
 
 <script>
 import SongItem from '@/components/SongItem.vue';
-import { db, storage } from '@/includes/firebase';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { db } from '@/includes/firebase';
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
 
 export default {
   name: 'HomeView',
@@ -58,14 +58,48 @@ export default {
   },
   data() {
     return {
-      peopleSongs: {}
+      peopleSongs: {},
+      peopleSongsOrder: [],
+      maxPerPage: 3
     }
   },
+  methods: {
+    async getPeopleSongs() {
+      const queryConstraints = [
+        collection(db, "songs"), 
+        limit(this.maxPerPage),
+        orderBy('modified_name')
+      ];
+      if (this.peopleSongsOrder.length > 0) {
+        queryConstraints.push(startAfter(await getDoc(doc(
+          db, 
+          `songs/${this.peopleSongsOrder.at(-1)}`))));
+      }
+      const snapshots = await getDocs(query(...queryConstraints));
+      snapshots.forEach(snapshot => {
+        this.peopleSongs[snapshot.id] = {...snapshot.data(), docID: snapshot.id};
+        this.peopleSongsOrder.push(snapshot.id);
+      });
+    },
+    handleScroll() {
+      const { scrollTop, offsetHeight } = document.documentElement;
+      const { innerHeight } = window;
+
+      const bottomWindow = (Math.round(scrollTop) + innerHeight) >= offsetHeight * 0.95 * (
+        window.devicePixelRatio > 1 ? 0.95 : window.devicePixelRatio);
+
+      if (bottomWindow){
+        this.getPeopleSongs();
+      }
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   async created() {
-    const snapshots = await getDocs(query(collection(db, "songs")));
-    snapshots.forEach(snapshot => {
-      this.peopleSongs[snapshot.id] = {...snapshot.data(), docID: snapshot.id};
-    });
+    this.getPeopleSongs();
+
+    window.addEventListener('scroll', this.handleScroll);
   }
 }
 </script>
