@@ -27,6 +27,9 @@ export default createStore({
     addSong: (state, {docID , song}) => {
       state.songs[docID] = song;
     },
+    stopPlaying: (state) => {
+      state.sound.stop();
+    },
     setSongs: (state, { newSongs }) => { state.songs = newSongs; },
     delSong: (state, { docID }) => { delete state.songs[docID] },
     newSong: (state, payload) => {
@@ -39,7 +42,7 @@ export default createStore({
   },
   getters: {
     authModalShow: (state) => state.authModalShow,
-    songs: (state) => state.songs
+    songs: (state) => state.songs,
   },
   actions: {
     async newSong({commit, state}, payload) {

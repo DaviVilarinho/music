@@ -11,7 +11,18 @@
         type="button"
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full
         focus:outline-none"
+        @click.prevent="stopPlaying"
+        v-if="songData.uid === this.$store.state.currentSong?.uid && 
+          this.$store.state.sound?.playing()"
+      >
+        <i class="fas fa-pause" />
+      </button>
+      <button
+        type="button"
+        class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full
+        focus:outline-none"
         @click.prevent="newSong(songData)"
+        v-else
       >
         <i class="fas fa-play" />
       </button>
@@ -112,7 +123,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { db, auth } from '@/includes/firebase';
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
 
@@ -160,6 +171,7 @@ export default {
   },
   methods: {
     ...mapActions(['newSong']),
+    ...mapMutations(['stopPlaying']),
     async addComment(formValue) {
       this.commentInSubmission = true;
       this.commentShowAlert = true;
