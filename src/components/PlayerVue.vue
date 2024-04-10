@@ -6,14 +6,15 @@
       <div class="float-left w-7 h-7 leading-3">
         <button
           type="button"
-          @click.prevent="stopPlaying"
+          @click.prevent="pausePlaying"
           v-if="this.$store.state.sound?.playing && this.$store.state.sound.playing()"
         >
           <i class="fa fa-pause text-gray-500 text-xl" />
         </button>
         <button
           type="button"
-          @click.prevent="play"
+          @click.prevent="playCurrentSong"
+          :disabled="this.$store.state.sound === undefined"
           v-else
         >
           <i class="fa fa-play text-gray-500 text-xl" />
@@ -58,7 +59,7 @@ import { mapMutations } from 'vuex';
 export default {
   name: 'PlayerVue',
   methods: {
-    ...mapMutations(['play', 'pausePlaying'])
+    ...mapMutations(['playCurrentSong', 'pausePlaying'])
   }
 }
 </script>

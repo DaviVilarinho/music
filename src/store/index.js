@@ -11,7 +11,7 @@ export default createStore({
     userLoggedIn: false,
     songs: {},
     currentSong: {},
-    sound: {},
+    sound: undefined,
   },
   mutations: {
     toggleAuthModal: (state) => {
