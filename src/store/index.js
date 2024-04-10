@@ -3,12 +3,15 @@ import { auth, db, storage } from '@/includes/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore"; 
 import { deleteObject, ref } from 'firebase/storage';
+import { Howl } from 'howler';
 
 export default createStore({
   state: {
     authModalShow: false,
     userLoggedIn: false,
-    songs: {}
+    songs: {},
+    currentSong: {},
+    sound: {}
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -25,13 +28,24 @@ export default createStore({
       state.songs[docID] = song;
     },
     setSongs: (state, { newSongs }) => { state.songs = newSongs; },
-    delSong: (state, { docID }) => { delete state.songs[docID] }
+    delSong: (state, { docID }) => { delete state.songs[docID] },
+    newSong: (state, payload) => {
+      state.currentSong = payload;
+      state.sound = new Howl({
+        src: [payload.url],
+        html5: true,
+      });
+    }
   },
   getters: {
     authModalShow: (state) => state.authModalShow,
     songs: (state) => state.songs
   },
   actions: {
+    async newSong({commit, state}, payload) {
+      commit('newSong', payload);
+      state.sound.play();
+    },
     async querySongsByUser({ commit }) {
       const snapshots = await getDocs(
         query(collection(db, "songs"), where('uid', '==', auth.currentUser.uid)));

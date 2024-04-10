@@ -11,6 +11,7 @@
         type="button"
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full
         focus:outline-none"
+        @click.prevent="newSong(songData)"
       >
         <i class="fas fa-play" />
       </button>
@@ -111,6 +112,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import { db, auth } from '@/includes/firebase';
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
 
@@ -137,7 +139,6 @@ export default {
       commentShowAlert: false,
       commentAlertVariant: COMMENT_SUBMITTING_VARIANT,
       commentAlertText: COMMENT_SUBMITTING_TEXT,
-
     }
   },
   computed: {
@@ -158,6 +159,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['newSong']),
     async addComment(formValue) {
       this.commentInSubmission = true;
       this.commentShowAlert = true;
