@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { auth, db, storage } from '@/includes/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore"; 
 import { deleteObject, ref } from 'firebase/storage';
 
@@ -59,6 +59,10 @@ export default createStore({
         delete userDocContent.confirm_password;
 
         await setDoc(doc(db, "users", userCredentials.user.uid), userDocContent);
+
+        await updateProfile(userCredentials.user, {
+          displayName: userDocContent.name
+        })
         
         commit('toggleAuth');
     },
