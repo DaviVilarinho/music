@@ -1,5 +1,11 @@
 <template>
-  <li class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50">
+  <li 
+    class="flex justify-between items-center p-3 pl-6 cursor-pointer transition duration-300 hover:bg-gray-50"
+    @click.prevent="$store.state.currentSong?.original_name !== song.original_name 
+      ? newSong(song)
+      : () => {}"
+    :class="{ 'bg-green-50' : $store.state.currentSong?.original_name === song.original_name }"
+  >
     <div>
       <router-link
         :to="{ name: 'song', params: { id: song.docID } }"
@@ -19,8 +25,12 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 export default {
   name: 'SongItem',
+  methods: {
+    ...mapActions(['newSong'])
+  },
   props: {
     song: {
       type: Object,
