@@ -60,11 +60,13 @@ export default {
     return {
       peopleSongs: {},
       peopleSongsOrder: [],
-      maxPerPage: 3
+      maxPerPage: 3,
+      hasPendingRequest: false
     }
   },
   methods: {
     async getPeopleSongs() {
+      this.hasPendingRequest = true;
       const queryConstraints = [
         collection(db, "songs"), 
         limit(this.maxPerPage),
@@ -80,6 +82,7 @@ export default {
         this.peopleSongs[snapshot.id] = {...snapshot.data(), docID: snapshot.id};
         this.peopleSongsOrder.push(snapshot.id);
       });
+      this.hasPendingRequest = false;
     },
     handleScroll() {
       const { scrollTop, offsetHeight } = document.documentElement;
@@ -88,7 +91,7 @@ export default {
       const bottomWindow = (Math.round(scrollTop) + innerHeight) >= offsetHeight * 0.95 * (
         window.devicePixelRatio > 1 ? 0.95 : window.devicePixelRatio);
 
-      if (bottomWindow){
+      if (bottomWindow && !this.hasPendingRequest){
         this.getPeopleSongs();
       }
     }
