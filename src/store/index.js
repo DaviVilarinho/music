@@ -14,7 +14,8 @@ export default createStore({
     currentSong: {},
     sound: undefined,
     seek: '00:00',
-    duration: '00:00'
+    duration: '00:00',
+    completion: 0
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -53,6 +54,7 @@ export default createStore({
     updatePosition(state) {
       state.seek = formatTimeSecondToPlayer(state.sound.seek());
       state.duration = formatTimeSecondToPlayer(state.sound.duration());
+      state.completion = state.sound.seek()/state.sound.duration();
     },
   },
   getters: {

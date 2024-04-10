@@ -38,14 +38,14 @@
           <!-- Player Ball -->
           <span
             class="absolute top-neg-8 text-gray-800 text-lg"
-            style="left: 50%"
+            :style="{ left: completionPercentage }"
           >
             <i class="fas fa-circle" />
           </span>
           <!-- Player Progress Bar-->
           <span
             class="block h-2 rounded bg-gradient-to-r from-green-500 to-green-400"
-            style="width: 50%"
+            :style="{ width: completionPercentage }"
           />
         </span>
       </div>
@@ -63,6 +63,11 @@ export default {
   name: 'PlayerVue',
   methods: {
     ...mapMutations(['playCurrentSong', 'pausePlaying'])
+  },
+  computed: {
+    completionPercentage() {
+      return Math.floor(this.$store.state.completion * 100) + '%';
+    }
   }
 }
 </script>
