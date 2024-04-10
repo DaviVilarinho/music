@@ -55,6 +55,7 @@ export default createStore({
   },
   actions: {
     async newSong({ commit, state }, payload) {
+      state.sound?.stop();
       commit('newSong', payload);
     },
     async querySongsByUser({ commit }) {

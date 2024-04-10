@@ -12,7 +12,7 @@
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full
         focus:outline-none"
         @click.prevent="pausePlaying"
-        v-if="songData.uid === this.$store.state.currentSong?.uid && 
+        v-if="songData.original_name === this.$store.state.currentSong?.original_name && 
           this.$store.state.sound?.playing && this.$store.state.sound.playing()"
       >
         <i class="fas fa-pause" />
