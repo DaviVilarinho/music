@@ -12,6 +12,8 @@ export default createStore({
     songs: {},
     currentSong: {},
     sound: undefined,
+    seek: '00:00',
+    duration: '00:00'
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -34,7 +36,6 @@ export default createStore({
     playCurrentSong: (state) => {
       if (state.sound.play) {
         state.sound.play();
-        console.log('seek ', state.currentSong.seekTime ?? 0);
         state.sound.seek(state.currentSong.seekTime ?? 0);
       }
     },
@@ -47,16 +48,33 @@ export default createStore({
         html5: true,
       });
       state.sound.play();
-    }
+    },
+    updatePosition(state) {
+      state.seek = state.sound.seek();
+      state.duration = state.sound.duration();
+    },
   },
   getters: {
     authModalShow: (state) => state.authModalShow,
     songs: (state) => state.songs,
   },
   actions: {
-    async newSong({ commit, state }, payload) {
+    async progress({ commit, state, dispatch }) {
+      commit('updatePosition');
+
+      if (state.sound.playing()) {
+        requestAnimationFrame(() => { dispatch ('progress') });
+      }
+    },
+    async newSong({ commit, state, dispatch }, payload) {
       state.sound?.stop();
       commit('newSong', payload);
+
+      state.sound.on('play', () => {
+        requestAnimationFrame(() => {
+          dispatch('progress');
+        });
+      });
     },
     async querySongsByUser({ commit }) {
       const snapshots = await getDocs(
