@@ -35,40 +35,44 @@
       </div>
       <div
         class="p-6"
-        v-if="this.$store.state.userLoggedIn"
       >
         <div
-          v-if="commentShowAlert"
-          class="text-white text-center font-bold p-5 mb-4"
-          :class="commentAlertVariant"
+          v-if="this.$store.state.userLoggedIn"
         >
-          {{ commentAlertText }}
-        </div>
-        <vee-form 
-          :schema="schema"
-          @submit="addComment"
-        >
-          <vee-field
-            as="textarea"
-            name="comment"
-            class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
-              duration-500 focus:outline-none focus:border-black rounded mb-4"
-            placeholder="Your comment here..."
-          />
-          <VeeErrorMessage
-            class="text-red-600"
-            name="comment"
-          />
-          <button
-            type="submit"
-            class="py-1.5 px-3 rounded text-white bg-green-600 block"
-            :disabled="commentInSubmission"
+          <div
+            v-if="commentShowAlert"
+            class="text-white text-center font-bold p-5 mb-4"
+            :class="commentAlertVariant"
           >
-            Submit
-          </button>
-        </vee-form>
+            {{ commentAlertText }}
+          </div>
+          <vee-form 
+            :schema="schema"
+            @submit="addComment"
+          >
+            <vee-field
+              as="textarea"
+              name="comment"
+              class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
+              duration-500 focus:outline-none focus:border-black rounded mb-4"
+              placeholder="Your comment here..."
+            />
+            <VeeErrorMessage
+              class="text-red-600"
+              name="comment"
+            />
+            <button
+              type="submit"
+              class="py-1.5 px-3 rounded text-white bg-green-600 block"
+              :disabled="commentInSubmission"
+            >
+              Submit
+            </button>
+          </vee-form>
+        </div>
         <!-- Sort Comments -->
         <select
+          v-model="selectedSort"
           class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition
           duration-500 focus:outline-none focus:border-black rounded"
         >
@@ -86,7 +90,7 @@
   <ul class="container mx-auto mb-32">
     <li 
       class="p-6 bg-gray-50 border border-gray-200" 
-      v-for="userComment in comments"
+      v-for="userComment in getSortedComments"
       :key="userComment.commentId" 
     >
       <!-- Comment Author -->
@@ -123,6 +127,7 @@ export default {
   name: 'SongView',
   data() {
     return {
+      selectedSort: '1',
       songData: {},
       comments: [],
       schema: {
@@ -133,6 +138,23 @@ export default {
       commentAlertVariant: COMMENT_SUBMITTING_VARIANT,
       commentAlertText: COMMENT_SUBMITTING_TEXT,
 
+    }
+  },
+  computed: {
+    getSortedComments() {
+      const sortedCollection = this.comments.toSorted((a, b) => {
+          let keyA = new Date(a.datePosted);
+          let keyB = new Date(b.datePosted);
+          if (keyA < keyB) return -1;
+          if (keyA > keyB) return 1;
+          return 0;
+      });
+
+      if (this.selectedSort == '1') {
+        sortedCollection.reverse();
+      }
+
+      return sortedCollection;
     }
   },
   methods: {
