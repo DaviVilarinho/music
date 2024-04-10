@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, up
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore"; 
 import { deleteObject, ref } from 'firebase/storage';
 import { Howl } from 'howler';
+import { formatTimeSecondToPlayer } from '@/includes/helper';
 
 export default createStore({
   state: {
@@ -50,8 +51,8 @@ export default createStore({
       state.sound.play();
     },
     updatePosition(state) {
-      state.seek = state.sound.seek();
-      state.duration = state.sound.duration();
+      state.seek = formatTimeSecondToPlayer(state.sound.seek());
+      state.duration = formatTimeSecondToPlayer(state.sound.duration());
     },
   },
   getters: {
