@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import ManageView from '@/views/ManageView.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '@/store';
+import SongView from '@/views/SongView.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: AboutView
+  },
+  {
+    name: 'song',
+    path: '/song/:id',
+    component: SongView
   },
   {
     path: '/manage',
