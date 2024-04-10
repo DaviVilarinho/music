@@ -11,7 +11,7 @@ export default createStore({
     userLoggedIn: false,
     songs: {},
     currentSong: {},
-    sound: {}
+    sound: {},
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -27,8 +27,16 @@ export default createStore({
     addSong: (state, {docID , song}) => {
       state.songs[docID] = song;
     },
-    stopPlaying: (state) => {
-      state.sound.stop();
+    pausePlaying: (state) => {
+      state.currentSong.seekTime = state.sound.pos();
+      state.sound.pause();
+    },
+    playCurrentSong: (state) => {
+      if (state.sound.play) {
+        state.sound.play();
+        console.log('seek ', state.currentSong.seekTime ?? 0);
+        state.sound.seek(state.currentSong.seekTime ?? 0);
+      }
     },
     setSongs: (state, { newSongs }) => { state.songs = newSongs; },
     delSong: (state, { docID }) => { delete state.songs[docID] },
@@ -38,6 +46,7 @@ export default createStore({
         src: [payload.url],
         html5: true,
       });
+      state.sound.play();
     }
   },
   getters: {
@@ -45,9 +54,8 @@ export default createStore({
     songs: (state) => state.songs,
   },
   actions: {
-    async newSong({commit, state}, payload) {
+    async newSong({ commit, state }, payload) {
       commit('newSong', payload);
-      state.sound.play();
     },
     async querySongsByUser({ commit }) {
       const snapshots = await getDocs(
