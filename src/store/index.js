@@ -62,6 +62,19 @@ export default createStore({
     songs: (state) => state.songs,
   },
   actions: {
+    updateSeek({ state, dispatch }, payload) {
+      if (!state.sound.playing()) {
+        return;
+      }
+
+      const { x, width } = payload.currentTarget.getBoundingClientRect();
+      const clickX = payload.clientX - x;
+      const percentage = clickX / width;
+      const seconds = state.sound.duration() * percentage;
+
+      state.sound.seek(seconds);
+      state.currentSong.seekTime = seconds;
+    },
     async progress({ commit, state, dispatch }) {
       commit('updatePosition');
 
