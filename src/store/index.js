@@ -70,7 +70,9 @@ export default createStore({
       }
     },
     async newSong({ commit, state, dispatch }, payload) {
-      state.sound?.stop();
+      if (state.sound instanceof Howl) {
+        state.sound.unload();
+      }
       commit('newSong', payload);
 
       state.sound.on('play', () => {
