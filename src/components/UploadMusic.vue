@@ -131,6 +131,7 @@ export default {
             this.uploads[file.name].variant = 'bg-green-400';
             this.uploads[file.name].icon = 'fas fa-check';
 
+            song.docID = docSnapshot.id;
             
             this.addSong({ docID: docSnapshot.id, song: song } );
           }
