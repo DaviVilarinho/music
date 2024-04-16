@@ -62,7 +62,7 @@ export default createStore({
     songs: (state) => state.songs,
   },
   actions: {
-    updateSeek({ state, dispatch }, payload) {
+    updateSeek({ state }, payload) {
       if (!state.sound.playing()) {
         return;
       }
