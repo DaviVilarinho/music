@@ -1,3 +1,6 @@
 {
-  "listen": "Listen to Great Music!"
+  "listen": "Listen to Great Music!",
+  "song": {
+    "comment_count": "No comments | One comment | {count} Comments"
+  }
 }
