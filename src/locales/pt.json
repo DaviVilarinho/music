@@ -1,3 +1,6 @@
 {
-  "listen": "Ouça boas músicas"
+  "listen": "Ouça boas músicas",
+  "song": {
+    "comment_count": "Nenhum comentário | Um comentário | {count} comentários"
+  }
 }
