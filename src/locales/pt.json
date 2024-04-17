@@ -2,5 +2,9 @@
   "listen": "Ouça boas músicas",
   "song": {
     "comment_count": "Nenhum comentário | Um comentário | {count} comentários"
+  },
+  "registration": {
+    "accept": "Eu aceito o que Music propõe em seus {0}",
+    "TOS": "Termos de Serviço"
   }
 }

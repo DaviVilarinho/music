@@ -2,5 +2,9 @@
   "listen": "Listen to Great Music!",
   "song": {
     "comment_count": "No comments | One comment | {count} Comments"
+  },
+  "registration": {
+    "accept": "I accept Music's {0}",
+    "TOS": "Terms of Service"
   }
 }
