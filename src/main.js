@@ -7,11 +7,13 @@ import {auth} from './includes/firebase'
 import './assets/tailwind.css'
 import './assets/main.css'
 import icon from './directives/icon'
+import i18n from './i18n'
 
 let app;
 auth.onAuthStateChanged(() => {
   if (!app) {
     app = createApp(App)
+      .use(i18n)
       .use(router)
       .use(store)
       .use(veeValidation)
