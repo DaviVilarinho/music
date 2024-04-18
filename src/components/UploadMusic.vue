@@ -89,6 +89,16 @@ export default {
         if (file.type !== 'audio/mpeg') {
           return;
         }
+
+        if (!navigator.onLine) {
+          this.uploads[file.name] = {
+            name: file.name,
+          };
+          this.uploads[file.name].text_class = 'text-red-400';
+          this.uploads[file.name].variant = 'bg-red-400';
+          this.uploads[file.name].icon = 'fas fa-times';
+          return;
+        }
         const storageRef = ref(storage, `songs/${file.name}`);
 
         const task = uploadBytesResumable(storageRef, file);
