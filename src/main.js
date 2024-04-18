@@ -8,6 +8,7 @@ import './assets/tailwind.css'
 import './assets/main.css'
 import icon from './directives/icon'
 import i18n from './i18n'
+import './registerServiceWorker'
 
 let app;
 auth.onAuthStateChanged(() => {
